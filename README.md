@@ -44,8 +44,8 @@ Widget ini menyediakan:
 Karena semua widget di bawahnya membutuhkan *context* tema dan navigasi dari (`MaterialApp`), maka widget ini **selalu digunakan sebagai root widget** pada aplikasi berbasis Material Design.
 
 ### 4. Jelaskan perbedaan antara `StatelessWidget` dan `StatefulWidget`. Kapan kamu memilih salah satunya?
-**a. `StatelessWidget`** -> Tidak memiliki state (keadaan) yang dapat berubah. Nilainya tetap selama aplikasi berjalan. Contoh penggunaannya pada Tampilan teks, ikon, tombol statis.
-**b. `StatefulWidget`** -> Memiliki state yang dapat berubah selama aplikasi berjalan. Setiap perubahan state akan me-*rebuild* UI. Contoh penggunaannya pada counter, form input, atau data dinamis yang berubah karena interaksi user.
+**- `StatelessWidget`** -> Tidak memiliki state (keadaan) yang dapat berubah. Nilainya tetap selama aplikasi berjalan. Contoh penggunaannya pada Tampilan teks, ikon, tombol statis.
+**- `StatefulWidget`** -> Memiliki state yang dapat berubah selama aplikasi berjalan. Setiap perubahan state akan me-*rebuild* UI. Contoh penggunaannya pada counter, form input, atau data dinamis yang berubah karena interaksi user.
 
 ### 5. Apa itu `BuildContext` dan mengapa penting di Flutter? Bagaimana penggunaannya di metode `build`?
 `BuildContext` adalah objek yang menyimpan informasi posisi suatu widget di dalam *widget tree*.
@@ -63,6 +63,6 @@ Widget build(BuildContext context) {
 ```
 
 ### 6. Jelaskan konsep *hot reload* di Flutter dan bagaimana bedanya dengan *hot restart*.
-**a. Hot Reload** -> Menyisipkan perubahan kode ke dalam aplikasi yang sedang berjalan tanpa kehilangan state (misalnya nilai counter tidak reset). Cocok untuk memperbarui UI saat coding.
-**b. Hot Restart** -> Menjalankan ulang aplikasi dari awal dan **menghapus semua state**. Aplikasi memulai ulang seperti baru dijalankan.
+**- Hot Reload** -> Menyisipkan perubahan kode ke dalam aplikasi yang sedang berjalan tanpa kehilangan state (misalnya nilai counter tidak reset). Cocok untuk memperbarui UI saat coding.
+**- Hot Restart** -> Menjalankan ulang aplikasi dari awal dan **menghapus semua state**. Aplikasi memulai ulang seperti baru dijalankan.
 Dengan *hot reload*, kita bisa langsung melihat hasil perubahan UI dalam hitungan detik tanpa harus membangun ulang seluruh aplikasi.
