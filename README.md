@@ -61,3 +61,42 @@ Widget build(BuildContext context) {
 **- Hot Restart** -> Menjalankan ulang aplikasi dari awal dan **menghapus semua state**. Aplikasi memulai ulang seperti baru dijalankan.
 
 Dengan *hot reload*, kita bisa langsung melihat hasil perubahan UI dalam hitungan detik tanpa harus membangun ulang seluruh aplikasi.
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+## TUGAS 8: FLUTTER NAVIGATION, LAYOUTS, FORMS, AND INPUT ELEMENTS
+
+### 1. Jelaskan perbedaan antara `Navigator.push()` dan `Navigator.pushReplacement()` pada Flutter.
+**`Navigator.push()`** digunakan untuk menambahkan halaman baru di atas stack halaman yang sedang aktif. Artinya, pengguna bisa kembali ke halaman sebelumnya dengan menekan tombol Back, karena halaman lama tetap ada di dalam memori aplikasi. Sebaliknya, **`Navigator.pushReplacement()`** digunakan untuk mengganti halaman saat ini dengan halaman baru, sehingga halaman sebelumnya dihapus dari stack dan pengguna tidak dapat kembali dengan tombol Back. Penerapan di aplikasi GoollMart:
+**- `Navigator.push()`** digunakan ketika pengguna menekan tombol “Create Product” di halaman utama (menu.dart) agar mereka bisa kembali ke halaman utama setelah mengisi form.
+**- `Navigator.pushReplacement()`** digunakan pada Drawer, misalnya ketika menekan “Home” atau “Create Product”, supaya halaman berpindah sepenuhnya tanpa menumpuk halaman sebelumnya (efisien untuk navigasi utama).
+
+### 2. Bagaimana kamu memanfaatkan hierarchy widget seperti `Scaffold`, `AppBar`, dan `Drawer` untuk membangun struktur halaman yang konsisten di seluruh aplikasi?
+Di aplikasi GoollMart, ketiga widget ini digunakan sebagai struktur dasar agar setiap halaman memiliki tampilan dan navigasi yang konsisten:
+**- `Scaffold`** berfungsi sebagai kerangka utama setiap halaman, yang memuat seluruh elemen seperti AppBar, Drawer, dan body.
+**- `AppBar`** digunakan untuk menampilkan judul halaman di bagian atas, misalnya “GoollMart” di halaman utama dan “Create Product Form” di halaman form produk.
+**- `Drawer`** digunakan sebagai menu navigasi yang muncul di sisi kiri, berisi dua opsi: “Home” dan “Create Product”. Drawer ini disertakan di setiap halaman untuk konsistensi navigasi.
+
+Dengan kombinasi ini, seluruh halaman aplikasi GoollMart terasa menyatu secara visual dan mudah digunakan oleh pengguna.
+
+### 3. Dalam konteks desain antarmuka, apa kelebihan menggunakan layout widget seperti `Padding`, `SingleChildScrollView`, dan `ListView` saat menampilkan elemen-elemen form? Berikan contoh penggunaannya dari aplikasi kamu.
+Widget layout ini sangat penting untuk menjaga kenyamanan tampilan form dan responsivitas layar:
+**- `Padding`** memberi jarak antar elemen, sehingga form terlihat rapi dan tidak saling menempel.
+**- `SingleChildScrollView`** memungkinkan halaman form untuk digulir (scroll), agar tidak terjadi overflow ketika form terlalu panjang atau dibuka di layar kecil.
+**- `ListView` atau `Column`** digunakan untuk menyusun elemen form secara vertikal, memudahkan pengguna mengisi dari atas ke bawah. 
+
+Contoh di aplikasi GoollMart:
+Pada `product_form.dart`, seluruh elemen form (`TextFormField`, `DropdownButtonFormField`, dan `SwitchListTile`) dibungkus di dalam `SingleChildScrollView` dengan `Padding` di setiap input agar tata letaknya rapi dan tidak keluar layar saat keyboard muncul.
+
+### 4. Bagaimana kamu menyesuaikan warna tema agar aplikasi Football Shop memiliki identitas visual yang konsisten dengan brand toko?
+Warna tema GoollMart disesuaikan agar konsisten dengan nuansa biru dan biru tua (indigo) yang merepresentasikan profesionalitas dan semangat olahraga. Penyesuaiannya dilakukan di main.dart melalui konfigurasi ThemeData dan ColorScheme berikut:
+```dart
+theme: ThemeData(
+  colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
+      .copyWith(secondary: Colors.blueAccent[400]),
+),
+```
+**- `primarySwatch: Colors.blue`** digunakan sebagai warna utama untuk AppBar dan komponen utama.
+**- `secondary: Colors.blueAccent[400]`** digunakan sebagai warna sekunder untuk elemen seperti tombol dan kartu (card).
+
+Dengan ini, seluruh halaman di aplikasi GoollMart memiliki identitas visual yang seragam, bersih, dan merepresentasikan brand toko dengan baik.
