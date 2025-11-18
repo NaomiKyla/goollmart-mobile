@@ -103,7 +103,7 @@ Dengan ini, seluruh halaman di aplikasi GoollMart memiliki identitas visual yang
 
 ------------------------------------------------------------------------------------------------------------------------------------------
 
-## TUGAS 8: INTEGRASI LAYANAN WEB DJANGO DENGAN APLIKASI FLUTTER 
+## TUGAS 9: INTEGRASI LAYANAN WEB DJANGO DENGAN APLIKASI FLUTTER 
 
 ### 1. Jelaskan mengapa kita perlu membuat model Dart saat mengambil/mengirim data JSON? Apa konsekuensinya jika langsung memetakan `Map<String, dynamic>` tanpa model (terkait validasi tipe, null-safety, maintainability)?
 **1. Keuntungan menggunakan model Dart:**
