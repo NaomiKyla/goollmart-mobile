@@ -55,7 +55,7 @@ class ItemCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
-                    // Featured badge (sinkron dengan item detail)
+                    // Featured badge 
                     if (item.isFeatured)
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -86,7 +86,7 @@ class ItemCard extends StatelessWidget {
 
                     const SizedBox(height: 8),
 
-                    // Category chip (sinkron dengan item detail)
+                    // Category chip 
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 5),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:goollmart/models/item_entry.dart';
-import 'package:intl/intl.dart'; // ← tambah ini
+import 'package:intl/intl.dart'; 
 
 class ItemDetailPage extends StatelessWidget {
   final ItemEntry item;
@@ -9,7 +9,7 @@ class ItemDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formattedDate = DateFormat('dd MMM yyyy').format(item.dateAdded); // ← format tanggal
+    final formattedDate = DateFormat('dd MMM yyyy').format(item.dateAdded); 
 
     return Scaffold(
       appBar: AppBar(
@@ -101,7 +101,6 @@ class ItemDetailPage extends StatelessWidget {
 
                   const SizedBox(height: 12),
 
-                  // ✅ **DATE ADDED**
                   Text(
                     "Added on: $formattedDate",
                     style: const TextStyle(

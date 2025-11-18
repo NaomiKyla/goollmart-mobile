@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // TITLE
+
                     RichText(
                       textAlign: TextAlign.center,
                       text: const TextSpan(
@@ -72,7 +72,6 @@ class _LoginPageState extends State<LoginPage> {
 
                     const SizedBox(height: 32),
 
-                    // USERNAME
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -102,7 +101,6 @@ class _LoginPageState extends State<LoginPage> {
 
                     const SizedBox(height: 18),
 
-                    // PASSWORD
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -133,7 +131,6 @@ class _LoginPageState extends State<LoginPage> {
 
                     const SizedBox(height: 28),
 
-                    // LOGIN BUTTON
                     SizedBox(
                       width: double.infinity,
                       height: 48,
@@ -187,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF374151), // dark grey
+                          backgroundColor: const Color(0xFF374151), 
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -205,7 +202,6 @@ class _LoginPageState extends State<LoginPage> {
 
                     const SizedBox(height: 20),
 
-                    // REGISTER LINK
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

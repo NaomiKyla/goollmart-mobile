@@ -28,7 +28,7 @@ class GoollMartNavbar extends StatelessWidget implements PreferredSizeWidget {
           Row(
             children: [
               Image.asset(
-                "assets/logo.png", // pakai logo kamu
+                "assets/logo.png", 
                 height: 28,
               ),
               const SizedBox(width: 8),

@@ -24,14 +24,12 @@ class MyHomePage extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.white),
         title: Row(
           children: [
-            // LOGO
             Image.asset(
-              "assets/logo.png",   // pastikan file ada di sini
+              "assets/logo.png",  
               height: 28,
             ),
             const SizedBox(width: 10),
 
-            // TEXT GOOLLMART
             const Text(
               'GoollMart',
               style: TextStyle(
