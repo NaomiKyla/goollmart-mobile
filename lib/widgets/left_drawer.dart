@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:goollmart/screens/menu.dart';
 import 'package:goollmart/screens/product_form.dart';
+import 'package:goollmart/screens/item_entry_list.dart';
+import 'package:goollmart/screens/login.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -10,34 +14,46 @@ class LeftDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
+          DrawerHeader(
+            decoration: const BoxDecoration(
+              color: Color(0xFF0B1120),
             ),
-            child: Column(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // LOGO
+                Image.asset(
+                  "assets/logo.png",
+                  height: 48,
+                ),
+                const SizedBox(width: 12),
+
+                // TEXT
+            const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'GoollMart',
-                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.white,  
                   ),
                 ),
-                Padding(padding: EdgeInsets.all(10)),
+                SizedBox(height: 6),
                 Text(
                   "Temukan produkmu di sini!",
-                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 14,
                     color: Colors.white,
-                    fontWeight: FontWeight.normal,
                   ),
                 ),
               ],
             ),
-          ),
+          ],
+        ),
+      ),
 
           // Home
           ListTile(
@@ -59,6 +75,47 @@ class LeftDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => const ProductFormPage()),
+              );
+            },
+          ),
+
+          ListTile(
+            leading: const Icon(Icons.add_reaction_rounded),
+            title: const Text('Item List'),
+            onTap: () {
+                // Route to news list page
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ItemListPage()),
+                  );
+              },
+          ),
+
+          const Divider(),
+
+          // LOGOUT BUTTON
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Logout'),
+            onTap: () async {
+              final request = context.read<CookieRequest>();
+              final response = await request.logout("http://localhost:8000/auth/logout/",);
+              
+              if (!context.mounted) return;
+
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      response["message"] ?? "Successfully logged out.",
+                    ),
+                  ),
               );
             },
           ),

@@ -19,14 +19,28 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'GoollMart',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+        backgroundColor: const Color(0xFF0B1120), 
+        elevation: 4,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Row(
+          children: [
+            // LOGO
+            Image.asset(
+              "assets/logo.png",   // pastikan file ada di sini
+              height: 28,
+            ),
+            const SizedBox(width: 10),
+
+            // TEXT GOOLLMART
+            const Text(
+              'GoollMart',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,     
+              ),
+            ),
+          ]
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       drawer: LeftDrawer(),
       body: Padding(

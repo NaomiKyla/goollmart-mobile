@@ -100,3 +100,134 @@ theme: ThemeData(
 **- `secondary: Colors.blueAccent[400]`** digunakan sebagai warna sekunder untuk elemen seperti tombol dan kartu (card).
 
 Dengan ini, seluruh halaman di aplikasi GoollMart memiliki identitas visual yang seragam, bersih, dan merepresentasikan brand toko dengan baik.
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+## TUGAS 8: INTEGRASI LAYANAN WEB DJANGO DENGAN APLIKASI FLUTTER 
+
+### 1. Jelaskan mengapa kita perlu membuat model Dart saat mengambil/mengirim data JSON? Apa konsekuensinya jika langsung memetakan `Map<String, dynamic>` tanpa model (terkait validasi tipe, null-safety, maintainability)?
+**1. Keuntungan menggunakan model Dart:**
+- **Validasi tipe**: Model memastikan bahwa data JSON yang diterima sesuai tipe yang diharapkan (misal `String`, `int`). Ini membantu mencegah error saat runtime.
+- **Null-safety**: Dengan model, kita bisa menentukan field mana yang wajib atau opsional, sehingga lebih aman dari null error.
+- **Maintainability & readability**: Akses data jadi lebih jelas (`product.name` daripada `data['name']`). Model juga memudahkan dokumentasi struktur data.
+- **Konversi otomatis**: Kita bisa menambahkan `fromJson` dan `toJson` untuk parsing JSON ke objek dan sebaliknya.
+**2. Konsekuensi langsung memetakan JSON ke `Map<String, dynamic>`:**
+- Risiko typo atau kesalahan akses key.
+- Tidak ada validasi tipe otomatis sehingga bisa muncul runtime error jika tipe data tidak sesuai.
+- Kurang readable, sulit dimaintain, terutama saat proyek besar atau struktur JSON kompleks.
+
+### 2. Apa fungsi package *http* dan *CookieRequest* dalam tugas ini? Jelaskan perbedaan peran *http* vs *CookieRequest*.
+**1. http package:**
+- Digunakan untuk melakukan request HTTP biasa (GET, POST) ke server Django.
+- Tidak secara otomatis menyimpan atau mengelola cookie. Cocok untuk fetch data sederhana dari API publik.
+**2. CookieRequest:**
+- Dikembangkan khusus untuk integrasi Flutter + Django dengan autentikasi berbasis session/cookie.
+- Menyimpan cookie secara otomatis, memungkinkan login, logout, dan request authenticated tanpa menambahkan header manual.
+- Bisa memanggil method seperti `login`, `get`, `post` dengan session user.
+
+**Perbedaan utama:**
+- `http` → request HTTP dasar, tidak otomatis kelola cookie.
+- `CookieRequest` → request HTTP + manajemen session/cookie otomatis → cocok untuk aplikasi dengan login Django.
+
+### 3. Jelaskan mengapa *instance CookieRequest* perlu untuk dibagikan ke semua komponen di aplikasi Flutter.
+**Instance `CookieRequest`** menyimpan session user yang sudah login. Dengan membagikannya melalui `Provider`, semua halaman/komponen bisa mengakses user yang sama untuk:
+- Mengambil data yang membutuhkan autentikasi.
+- Mengirim data baru ke server (misal tambah produk atau update profil).
+
+Tanpa shared instance, setiap halaman harus login ulang atau mengelola cookie sendiri → tidak praktis.
+
+### 4. Jelaskan konfigurasi konektivitas yang diperlukan agar Flutter dapat berkomunikasi dengan Django. Mengapa kita perlu menambahkan 10.0.2.2 pada ALLOWED_HOSTS, mengaktifkan CORS dan pengaturan SameSite/cookie, dan menambahkan izin akses internet di Android? Apa yang akan terjadi jika konfigurasi tersebut tidak dilakukan dengan benar?
+**1. ALLOWED_HOSTS & 10.0.2.2:**
+- Saat menggunakan Android emulator, `localhost` di emulator menunjuk ke emulator sendiri, bukan komputer host.
+- `10.0.2.2` menunjuk ke host machine.
+- Django harus menambahkan `10.0.2.2` ke `ALLOWED_HOSTS` agar request dari emulator diterima.
+**2. CORS:**
+- Cross-Origin Resource Sharing (CORS) diperlukan agar aplikasi Flutter dapat meminta resource dari Django yang berjalan di host berbeda.
+- Tanpa CORS → request akan ditolak karena security policy browser / emulator.
+**3. SameSite & Cookie Settings:**
+Agar cookie session dapat dikirim dari Flutter ke Django, pengaturan cookie harus sesuai (misal `SameSite=None` jika lintas domain).
+**4. Izin Internet di Android `(AndroidManifest.xml)`:**
+- Flutter perlu akses internet untuk melakukan HTTP request.
+- Tanpa permission → request gagal, halaman tidak bisa fetch data.
+**5. Konsekuensi jika konfigurasi tidak benar:**
+- Login gagal → session tidak tersimpan.
+- Data JSON tidak bisa di-fetch → List produk kosong.
+- Error CORS → request ditolak.
+
+### 5. Jelaskan mekanisme pengiriman data mulai dari input hingga dapat ditampilkan pada Flutter.
+1. Flutter mengirim HTTP GET request ke endpoint Django `fetchProduct`.
+2. Response dari server di-decode dari JSON ke list atau map.
+3. Data JSON diubah menjadi objek `Product` melalui `Product.fromJson()`.
+4. Semua objek `Product` disimpan di list `listProduct`.
+5. `FutureBuilder` digunakan untuk menunggu data selesai dimuat.
+- **Jika data belum siap** → tampil `CircularProgressIndicator`.
+- **Jika data siap** → tampil `ListView.builder` untuk menampilkan semua item.
+
+### 6. Jelaskan mekanisme autentikasi dari login, register, hingga logout. Mulai dari input data akun pada Flutter ke Django hingga selesainya proses autentikasi oleh Django dan tampilnya menu pada Flutter.
+1. User memasukkan username dan password di `TextField`.
+2. Flutter mengirim HTTP POST menggunakan `CookieRequest` ke endpoint login Django.
+```dart
+final response = await request.login(
+    "http://127.0.0.1:8000/auth/login/",  
+    {
+        'username': username,
+        'password': password,
+    });
+```
+3. Django memeriksa kredensial:
+- **Jika valid** → mengirim response berhasil.
+- **Jika gagal** → mengirim response error.
+4. Flutter memeriksa `request.loggedIn`:
+- **Jika berhasil** → navigasi ke `MyHomePage` dan tampilkan SnackBar “Welcome”.
+- **Jika gagal** → tampilkan `AlertDialog` berisi pesan error.
+
+### 7. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step! (bukan hanya sekadar mengikuti tutorial).
+1. Mempersiapkan API Django
+- Pastikan server Django sudah berjalan dan endpoint JSON & autentikasi tersedia (`/json/` untuk data produk, `/auth/login/` untuk login).
+- Cek response JSON di browser atau Postman untuk memastikan format data sudah sesuai.
+2. Menyediakan CookieRequest Global
+- Gunakan `Provider` di `main.dart` untuk membuat instance `CookieRequest` agar bisa diakses di semua halaman:
+```dart
+return Provider(
+  create: (_) => CookieRequest(),
+  child: MaterialApp(...),
+);
+```
+- Dengan cara ini, semua widget bisa melakukan request yang terautentikasi ke Django.
+3. Mengintegrasikan sistem autentikasi Django dengan proyek tugas Flutter.
+- Membuat django-app baru bernama `authentication` dan menambahkannya ke `INSTALLED_APPS` di `settings.py` aplikasi Django.
+- Menginstall `django-cors-headers` dan menambahkannya ke `INSTALLED_APPS` dan `requirements.txt`, serta menambahkan `corsheaders.middleware.CorsMiddleware` ke `MIDDLEWARE` di `settings.py`
+- Menambahkan beberapa konfigurasi berikut ke `settings.py`:
+```dart
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'None'
+```
+4. Mendesain Tampilan Login & Register
+- Sesuaikan warna dengan web GoollMart (navbar gelap, tulisan logo kuning, tombol login utama gelap).
+- Gunakan `TextField` untuk input, `ElevatedButton` untuk tombol login, dan `GestureDetectorv` untuk navigasi ke halaman register.
+- Pastikan desain responsif dengan `SingleChildScrollView` agar keyboard tidak menutupi input.
+5. Implementasi Autentikasi
+- Ambil input username & password dari `TextField`.
+- Kirim request login menggunakan `CookieRequest.login`.
+- Jika berhasil → navigasi ke `MyHomePage` + tampilkan `SnackBar`.
+- Jika gagal → tampilkan `AlertDialog` dengan pesan error dari Django.
+6. Mengambil & Menampilkan Data JSON
+- Buat function `fetchProduct()` yang melakukan GET request ke endpoint JSON.
+- Decode response JSON dan convert ke objek `Product` dengan `Product.fromJson()`.
+- Gunakan `FutureBuilder` untuk menunggu data dimuat, tampilkan `CircularProgressIndicator` jika belum siap.
+- Setelah data siap → tampilkan list produk menggunakan `ListView.builder`.
+7. Desain Halaman Produk & Detail
+- Sesuaikan warna background, card, dan teks supaya konsisten dengan tema web.
+- Gunakan Card untuk menampilkan setiap item produk dengan shadow dan border sesuai design.
+- Detail item menggunakan halaman baru `(DetailItemPage)` yang menampilkan info lengkap.
+8. Integrasi Navigasi & Interaksi
+- Pastikan tombol login/register dan item list bisa diklik.
+- Gunakan `Navigator.push` / `Navigator.pushReplacement` untuk berpindah halaman.
+- Gunakan `GestureDetector` di list item untuk menangkap tap user.
+9. Testing & Validasi
+- Test login dengan akun yang valid dan invalid.
+- Test fetch JSON: semua data tampil sesuai.
